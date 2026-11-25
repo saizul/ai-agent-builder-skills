@@ -1,0 +1,31 @@
+[
+  {
+    "name": "helper",
+    "parameters": {"type": "object", "properties": {"data": {"type": "string"}}}
+  },
+  {
+    "name": "search_orders",
+    "description": "Search orders for a customer by status and date range and return matching orders",
+    "parameters": {
+      "type": "object",
+      "required": ["customer_email", "order_id"],
+      "properties": {
+        "customer_email": {"type": "string", "description": "Customer email address"},
+        "status": {"type": "string", "description": "Order status, one of 'open', 'shipped' or 'delivered'"},
+        "limit": {"type": "integer", "description": "How many results, up to 50"},
+        "no_archive": {"type": "boolean", "description": "Skip archived orders"},
+        "tags": {"type": "array", "description": "Tags to filter by"},
+        "options": {"description": "Extra"}
+      }
+    }
+  },
+  {
+    "name": "search_orders",
+    "description": "Search orders for a customer by status and date range and return matching orders list",
+    "parameters": {"type": "array"}
+  },
+  {
+    "name": "bad name!",
+    "description": "short"
+  }
+]

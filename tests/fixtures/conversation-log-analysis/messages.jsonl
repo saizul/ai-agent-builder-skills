@@ -1,0 +1,11 @@
+{"conversation_id": "c1", "role": "user", "content": "Where is my order ORD-1?", "timestamp": "2026-11-20T09:00:00Z"}
+{"conversation_id": "c1", "role": "assistant", "content": "It ships tomorrow.", "timestamp": "2026-11-20T09:00:05Z"}
+{"conversation_id": "c2", "role": "user", "content": "I want to return my shoes", "timestamp": "2026-11-20T09:01:00Z"}
+{"conversation_id": "c2", "role": "assistant", "content": "I'm sorry, I can't help with that order type.", "timestamp": "2026-11-20T09:01:04Z"}
+{"conversation_id": "c2", "role": "user", "content": "I want to return my shoes please", "timestamp": "2026-11-20T09:01:30Z"}
+{"conversation_id": "c2", "role": "user", "content": "Let me talk to a human", "timestamp": "2026-11-20T09:02:00Z"}
+{"conversation_id": "c2", "role": "assistant", "content": "Transferring you to a colleague now.", "timestamp": "2026-11-20T09:02:03Z", "event": "handover"}
+{"conversation_id": "c3", "role": "user", "content": "Do you have a refund for order 55? mail me at kim@example.com", "timestamp": "2026-11-20T10:00:00Z"}
+{"conversation_id": "c3", "role": "tool", "name": "lookup_order", "content": "timeout after 5s", "error": true, "timestamp": "2026-11-20T10:00:02Z"}
+{"conversation_id": "c3", "role": "assistant", "content": "Something went wrong, please try again.", "timestamp": "2026-11-20T10:00:06Z"}
+{"conversation_id": "c3", "role": "user", "content": "???", "timestamp": "2026-11-20T10:01:00Z"}

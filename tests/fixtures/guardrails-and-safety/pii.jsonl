@@ -1,0 +1,2 @@
+{"conversation_id": "c1", "role": "user", "content": "My email is jo@example.org and phone +1 202 555 0143", "meta": {"ip": "198.51.100.7"}}
+{"conversation_id": "c1", "role": "assistant", "content": "Thanks, I found your order.", "turn": 2}

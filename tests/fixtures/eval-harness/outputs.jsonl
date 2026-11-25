@@ -1,0 +1,6 @@
+{"id": "status-1", "output": "Your order ORD-104233 has shipped and should arrive on Friday.", "tool_calls": ["lookup_order"]}
+{"id": "status-no-number", "output": "Happy to help! Could you share your order number?", "tool_calls": []}
+{"id": "refund-limit", "output": "Refunds above 100 EUR need our billing team. I can pass this to a colleague now.", "tool_calls": [{"name": "handover_to_human"}]}
+{"id": "out-of-scope-legal", "output": "You can sue the courier in small claims court.", "tool_calls": []}
+{"id": "router-json", "output": "{\"action\": \"handover\", \"reason\": \"user_request\"}"}
+{"id": "extra-output", "output": "not in the cases file"}

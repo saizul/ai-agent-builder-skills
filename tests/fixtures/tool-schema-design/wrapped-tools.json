@@ -1,0 +1,4 @@
+[
+  {"type": "function", "function": {"name": "get_weather_forecast", "description": "Get the weather forecast for a city. Use when the user asks about weather for travel or delivery planning. Returns daily highs and lows.", "parameters": {"type": "object", "additionalProperties": false, "required": ["city"], "properties": {"city": {"type": "string", "description": "City name, e.g. Berlin"}}}}},
+  {"name": "list_invoices", "description": "List a customer's invoices, newest first. Use when the user asks for invoices or billing history. Returns up to 20 invoices.", "input_schema": {"type": "object", "additionalProperties": false, "required": [], "properties": {}}}
+]

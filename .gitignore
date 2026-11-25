@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Release artifacts (built by .github/workflows/release.yml)
+dist/
+
+# Local outputs of the scripts (chunks, eval results, redacted logs)
+/out/
+/results/
+
+# Never commit credentials or raw conversation logs
+*.env
+!*.env.example
+/logs/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

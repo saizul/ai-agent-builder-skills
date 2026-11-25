@@ -1,0 +1,31 @@
+{
+  "tools": [
+    {
+      "name": "lookup_order",
+      "description": "Look up one order by order number and customer email. Use when the user gives an order number. Returns status, items and ETA. Read-only.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["order_number", "email"],
+        "properties": {
+          "order_number": {"type": "string", "description": "Order number from the confirmation email, e.g. ORD-123456"},
+          "email": {"type": "string", "format": "email", "description": "Email address used at checkout"}
+        }
+      }
+    },
+    {
+      "name": "cancel_order",
+      "description": "Cancel an order that has not shipped yet. Call only after the user confirmed the cancellation summary. Returns a cancellation reference.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["order_number", "reason"],
+        "properties": {
+          "order_number": {"type": "string", "description": "Order number, e.g. ORD-123456"},
+          "reason": {"type": "string", "enum": ["changed_mind", "ordered_by_mistake", "too_slow", "other"], "description": "Reason the customer gave for cancelling"},
+          "line_items": {"type": "array", "description": "Line numbers to cancel; omit to cancel all", "items": {"type": "integer", "minimum": 1, "description": "Line number on the order"}}
+        }
+      }
+    }
+  ]
+}

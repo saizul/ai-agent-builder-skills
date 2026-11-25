@@ -1,0 +1,47 @@
+name: Bug report
+description: A script crashed, reported a wrong finding, or a skill gave unsafe or wrong advice
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste secrets, API keys, real customer data or unredacted conversation logs.**
+        Run `skills/guardrails-and-safety/scripts/redact_pii.py` on examples first.
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Skill
+      options:
+        - agent-scoping
+        - tool-schema-design
+        - system-prompt-review
+        - rag-ingestion
+        - eval-harness
+        - guardrails-and-safety
+        - cost-latency-estimator
+        - conversation-log-analysis
+        - agent-deployment-checklist
+        - validator / repository tooling
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: The command you ran, its output, and (for wrong findings) a minimal redacted input.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "macOS 15, Python 3.12, Claude Code / Codex CLI / other agent"
+    validations:
+      required: true

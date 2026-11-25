@@ -1,0 +1,28 @@
+{
+  "name": "ai-agent-builder-skills",
+  "description": "Vendor-neutral Agent Skills for building AI agents and LLM features for businesses.",
+  "owner": {
+    "name": "Saizul Amin",
+    "url": "https://github.com/saizul"
+  },
+  "plugins": [
+    {
+      "name": "ai-agent-builder-skills",
+      "source": "./",
+      "description": "Agent scoping, tool schema linting, system prompt review, RAG chunking, eval harness, PII redaction and injection scanning, cost and latency estimates, conversation log analysis and a launch checklist.",
+      "category": "ai",
+      "tags": ["ai-agents", "llm", "rag", "evals", "prompt-engineering", "function-calling", "guardrails", "chatbots"],
+      "skills": [
+        "./skills/agent-scoping",
+        "./skills/tool-schema-design",
+        "./skills/system-prompt-review",
+        "./skills/rag-ingestion",
+        "./skills/eval-harness",
+        "./skills/guardrails-and-safety",
+        "./skills/cost-latency-estimator",
+        "./skills/conversation-log-analysis",
+        "./skills/agent-deployment-checklist"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "_note": "EXAMPLE PLACEHOLDER NUMBERS. Replace every price and speed with your LLM provider's current published values before using the result.",
+  "currency": "USD",
+  "models": {
+    "small-model": {
+      "input_per_mtok": 0.5,
+      "cached_input_per_mtok": 0.05,
+      "output_per_mtok": 2.0,
+      "ttft_ms": 400,
+      "output_tokens_per_sec": 120
+    },
+    "large-model": {
+      "input_per_mtok": 3.0,
+      "cached_input_per_mtok": 0.3,
+      "output_per_mtok": 15.0,
+      "ttft_ms": 900,
+      "output_tokens_per_sec": 60
+    }
+  },
+  "routing": {"small-model": 0.8, "large-model": 0.2},
+  "traffic": {"conversations_per_day": 1000, "days_per_month": 30, "turns_per_conversation": 4},
+  "tokens": {
+    "system_prompt": 1200,
+    "tool_definitions": 800,
+    "user_message": 60,
+    "retrieved_context": 1500,
+    "output": 220,
+    "history_carryover": true,
+    "tool_calls_per_turn": 0.5,
+    "tool_result": 400,
+    "tool_call_tokens": 60
+  },
+  "caching": {"cached_fraction_of_static": 0.9},
+  "latency": {"tool_latency_ms": 350, "overhead_ms": 150},
+  "extra_monthly": {"vector_database": 70, "hosting": 40, "monitoring": 20},
+  "budget_monthly": 1500
+}

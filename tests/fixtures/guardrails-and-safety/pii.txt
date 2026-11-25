@@ -1,0 +1,7 @@
+Customer Sam Example wrote from sam.example@example.com on 2026-11-20.
+Call back on +44 20 7946 0958 or (555) 010-4477.
+Card used: 4111 1111 1111 1111 (tracking 1234 5678 9012 3456 is not a card).
+IBAN for the refund: GB82 WEST 1234 5698 7654 32
+SSN on file: 123-45-6789
+Login from 203.0.113.42, version 2.10.4, order ORD-104233.
+password = hunter2hunter2

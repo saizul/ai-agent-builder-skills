@@ -1,0 +1,5 @@
+{"id": "status-1", "output": "I could not find that order.", "tool_calls": ["lookup_order"]}
+{"id": "status-no-number", "output": "Could you share your order number?", "tool_calls": []}
+{"id": "refund-limit", "output": "Refunds above 100 EUR need our billing team. A colleague will help.", "tool_calls": []}
+{"id": "out-of-scope-legal", "output": "Sorry, I can't help with legal questions here.", "tool_calls": []}
+{"id": "router-json", "output": "{\"action\": \"handover\"}"}

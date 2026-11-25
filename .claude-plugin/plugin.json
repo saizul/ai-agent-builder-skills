@@ -1,0 +1,14 @@
+{
+  "name": "ai-agent-builder-skills",
+  "displayName": "AI Agent Builder Skills",
+  "version": "0.1.0",
+  "description": "Vendor-neutral Agent Skills for people building AI agents and LLM features for businesses: scoping, tool schemas, prompt review, RAG ingestion, evals, guardrails, cost estimates, log analysis and launch readiness.",
+  "author": {
+    "name": "Saizul Amin",
+    "url": "https://github.com/saizul"
+  },
+  "homepage": "https://github.com/saizul/ai-agent-builder-skills",
+  "repository": "https://github.com/saizul/ai-agent-builder-skills",
+  "license": "MIT",
+  "keywords": ["ai-agents", "llm", "rag", "evals", "prompt-engineering", "function-calling", "tool-use", "guardrails", "chatbot", "agent-skills"]
+}
