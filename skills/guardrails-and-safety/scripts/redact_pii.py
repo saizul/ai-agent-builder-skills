@@ -7,6 +7,11 @@ US social security numbers, IPv4 addresses, and credential-like strings
 (key=value secrets, bearer tokens). Extra patterns can be added with
 --pattern NAME=REGEX.
 
+Known-safe values (your support address, documentation IPs, test cards) can
+be kept with --allow REGEX or --allow-file FILE (one regex per line, '#'
+comments). A detected value is left as-is when an allow regex matches the
+whole value; allowed values are counted separately and never printed.
+
 Modes: --mode label (default, "[EMAIL]"), mask ("j***@e***.com" style),
 hash (stable "[EMAIL:1a2b3c4d]" so the same value maps to the same token;
 use --salt to make hashes unguessable).
@@ -106,10 +111,13 @@ class Redactor:
         salt: str = "",
         extra: list[tuple[str, str]] | None = None,
         kinds: set[str] | None = None,
+        allow: list[str] | None = None,
     ) -> None:
         self.mode = mode
         self.salt = salt
         self.counts: Counter = Counter()
+        self.allowed: Counter = Counter()
+        self.allow = [re.compile(rx) for rx in allow or []]
         self.patterns = [(n, re.compile(rx)) for n, rx in extra or []] + PATTERNS
         if kinds:
             self.patterns = [(n, rx) for n, rx in self.patterns if n in kinds]
@@ -129,6 +137,9 @@ class Redactor:
             def repl(m: re.Match, kind=kind, check=check) -> str:
                 value = m.group(0)
                 if value.startswith("[") or (check and not check(value)):
+                    return value
+                if any(a.fullmatch(value) for a in self.allow):
+                    self.allowed[kind] += 1
                     return value
                 self.counts[kind] += 1
                 return self._replacement(kind, value)
@@ -157,6 +168,28 @@ def parse_pattern(text: str) -> tuple[str, str]:
     return name, rx
 
 
+def parse_allow(text: str) -> str:
+    try:
+        re.compile(text)
+    except re.error as exc:
+        raise argparse.ArgumentTypeError(f"bad allow regex: {exc}") from exc
+    return text
+
+
+def read_allow_file(path: Path) -> list[str]:
+    out = []
+    for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        try:
+            re.compile(line)
+        except re.error as exc:
+            raise ValueError(f"{path}:{n}: bad allow regex: {exc}") from exc
+        out.append(line)
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Redact PII and secrets from text or JSONL.")
     p.add_argument("file", help="input file, or '-' for stdin")
@@ -165,6 +198,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--jsonl", action="store_true", help="input is JSONL; redact string values only")
     p.add_argument("--only", help="comma-separated kinds to detect, e.g. EMAIL,PHONE")
     p.add_argument("--pattern", action="append", type=parse_pattern, default=[], help="extra NAME=REGEX")
+    p.add_argument(
+        "--allow",
+        action="append",
+        type=parse_allow,
+        default=[],
+        help="regex for values to keep; must match the whole value (repeatable)",
+    )
+    p.add_argument("--allow-file", type=Path, help="file with one allow regex per line ('#' comments)")
     p.add_argument("--out", type=Path, help="write redacted output here instead of stdout")
     p.add_argument("--check", action="store_true", help="report counts only; exit 1 if anything found")
     p.add_argument(
@@ -173,11 +214,12 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
     try:
         text = sys.stdin.read() if args.file == "-" else Path(args.file).read_text(encoding="utf-8")
-    except OSError as exc:
+        allow = args.allow + (read_allow_file(args.allow_file) if args.allow_file else [])
+    except (OSError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     kinds = {k.strip().upper() for k in args.only.split(",")} if args.only else None
-    r = Redactor(args.mode, args.salt, args.pattern, kinds)
+    r = Redactor(args.mode, args.salt, args.pattern, kinds, allow)
     if args.jsonl:
         out_lines = []
         for n, line in enumerate(text.splitlines(), 1):
@@ -192,12 +234,16 @@ def main(argv: list[str] | None = None) -> int:
     else:
         result = r.redact(text)
     report = {"total": sum(r.counts.values()), "by_kind": dict(sorted(r.counts.items()))}
+    if allow:
+        report["allowed"] = dict(sorted(r.allowed.items()))
     if args.check:
         if args.json:
             print(json.dumps(report, indent=2))
         else:
             kinds_txt = ", ".join(f"{k} {v}" for k, v in report["by_kind"].items()) or "none"
             print(f"PII/secrets found: {report['total']} ({kinds_txt})")
+            if r.allowed:
+                print(f"allowed (kept): {sum(r.allowed.values())}")
         return 1 if report["total"] else 0
     if args.out:
         args.out.write_text(result, encoding="utf-8")

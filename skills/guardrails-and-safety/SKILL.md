@@ -1,6 +1,6 @@
 ---
 name: guardrails-and-safety
-description: Add practical guardrails to business LLM agents - PII and secret redaction before prompts, logs and indexes; prompt-injection red flags in retrieved documents, web pages, emails and tool results; least-privilege tools and confirmation for write actions; output checks and abuse handling - with a redaction script (emails, phones, Luhn-checked cards, IBANs, SSNs, IPs, credentials; label/mask/hash modes; JSONL aware) and an injection scanner (override phrases, fake role markers, exfiltration links, hidden HTML and invisible characters). Use when an agent handles customer data, reads untrusted content (RAG, browsing, email), takes actions, before launch or a security review, or when asked how to make a chatbot safe.
+description: Add practical guardrails to business LLM agents - PII and secret redaction before prompts, logs and indexes; prompt-injection red flags in retrieved documents, web pages, emails and tool results; least-privilege tools and confirmation for write actions; output checks and abuse handling - with a redaction script (emails, phones, Luhn-checked cards, IBANs, SSNs, IPs, credentials; label/mask/hash modes; JSONL aware; allowlist for known-safe values) and an injection scanner (override phrases, fake role markers, exfiltration links, hidden HTML and invisible characters). Use when an agent handles customer data, reads untrusted content (RAG, browsing, email), takes actions, before launch or a security review, or when asked how to make a chatbot safe.
 license: MIT
 compatibility: Python 3.8+ standard library. Heuristic checks; combine with access control and your LLM provider's or platform's safety features.
 metadata:
@@ -44,6 +44,7 @@ Paths below are relative to this skill's folder.
    python3 scripts/redact_pii.py logs.jsonl --jsonl --mode hash --salt "$REDACT_SALT" --out clean.jsonl
    python3 scripts/redact_pii.py export.csv --check --json          # gate: exit 1 if PII found
    python3 scripts/redact_pii.py notes.txt --only EMAIL,PHONE --pattern 'ORDER=ORD-\d{6}'
+   python3 scripts/redact_pii.py logs.txt --allow 'support@example\.com' --allow-file allow.txt
    ```
    `--mode hash` maps the same value to the same token so analytics still work; keep the salt
    secret. The script never prints the values it finds. Regexes miss names and addresses; for
