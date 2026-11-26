@@ -120,3 +120,35 @@ def test_reference_doc_is_flagged_by_design():
     # Documentation about injection matches by design (documented false positive).
     text = (SKILLS / SKILL / "references" / "injection-patterns.md").read_text()
     assert sum(h["weight"] for h in s.scan_text(text)) >= 4
+
+
+def test_allowlist_keeps_known_safe_values():
+    red = r.Redactor(allow=[r"support@example\.com", r"192\.0\.2\.\d+"])
+    out = red.redact("Mail support@example.com or jo@example.com from 192.0.2.10 and 203.0.113.9")
+    assert out == "Mail support@example.com or [EMAIL] from 192.0.2.10 and [IPV4]"
+    assert red.counts == {"EMAIL": 1, "IPV4": 1}
+    assert red.allowed == {"EMAIL": 1, "IPV4": 1}
+    # The allow regex must match the whole value, not a substring.
+    assert r.Redactor(allow=[r"example\.com"]).redact("jo@example.com") == "[EMAIL]"
+
+
+def test_allowlist_cli(tmp_path):
+    src = tmp_path / "in.txt"
+    src.write_text("Contact support@example.com, card 4111 1111 1111 1111, jo@example.org\n")
+    allow = tmp_path / "allow.txt"
+    allow.write_text("# safe values\nsupport@example\\.com\n\n4111 1111 1111 1111\n")
+    res = run_script(SKILL, REDACT, str(src), "--allow-file", str(allow), "--check", "--json")
+    assert res.returncode == 1
+    data = json.loads(res.stdout)
+    assert data == {"total": 1, "by_kind": {"EMAIL": 1}, "allowed": {"CARD": 1, "EMAIL": 1}}
+    assert "example" not in res.stdout and "4111" not in res.stdout
+    res = run_script(SKILL, REDACT, str(src), "--allow", r"support@example\.com")
+    assert "support@example.com" in res.stdout and "[EMAIL]" in res.stdout and "[CARD]" in res.stdout
+    ok = run_script(
+        SKILL, REDACT, str(src), "--allow-file", str(allow), "--allow", r"jo@example\.org", "--check"
+    )
+    assert ok.returncode == 0
+    assert run_script(SKILL, REDACT, str(src), "--allow", "(").returncode == 2
+    allow.write_text("[bad\n")
+    bad = run_script(SKILL, REDACT, str(src), "--allow-file", str(allow))
+    assert bad.returncode == 2 and "allow.txt:1" in bad.stderr

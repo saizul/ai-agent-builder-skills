@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `guardrails-and-safety`: `redact_pii.py --allow REGEX` (repeatable) and `--allow-file FILE`
+  keep known-safe values such as a public support address, documentation IPs or test cards.
+  An allow regex must match the whole detected value; kept values are reported as `allowed`
+  counts (never printed) and do not fail `--check`.
+
 ## [0.1.0] - 2026-11-25
 
 ### Added
